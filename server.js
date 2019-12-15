@@ -15,7 +15,7 @@ const passport = require("passport");
 const mongooseConnect = require("./config/mongodb");
 const cors = require("cors");
 
-// server.use(cors());
+server.use(cors());
 
 
 //allows json to be sent to via request express
