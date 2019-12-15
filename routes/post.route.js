@@ -9,7 +9,7 @@ const router = express.Router();
 
 //get all posts
 router.get("/",  (req, res) => {
-  Post.find()
+  Post.find().populate('user')
     .then(data => {
       res.send(data);
     })
@@ -74,7 +74,7 @@ router.post(
 
   //get a specfic post
   router.get("/:id", (req, res) => {
-    Post.findById(req.params.id)
+    Post.findById(req.params.id).populate('user')
       .then(data => {
         res.send(data);
       })

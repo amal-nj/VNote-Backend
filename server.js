@@ -2,7 +2,7 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 
 const express = require("express");
-// const PORT = process.env.PORT || 5300;
+//const PORT = process.env.PORT || 5300;
 const PORT = process.env.PORT;
 
 const server = express();
@@ -37,7 +37,7 @@ server.use(passport.session());
 server.use("/api/auth", require("./routes/auth.route"));
 server.use(
   "/api/post",
-//   passport.authenticate("jwt", { session: false }),
+ passport.authenticate("jwt", { session: false }),
   require("./routes/post.route")
 );
 
