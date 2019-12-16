@@ -11,6 +11,9 @@ const router = express.Router();
 router.get("/",  (req, res) => {
   Post.find().populate('user')
     .then(data => {
+      
+      // req.app.io.sockets.emit("hello");
+
       res.send(data);
     })
     .catch(e => {
@@ -39,6 +42,8 @@ router.post(
        newPost
          .save()
          .then(() => {
+          req.app.io.sockets.emit("newPost", post.location);
+
            return res.json({ message: "Post created" });
          })
          .catch(e => {
@@ -52,7 +57,9 @@ router.post(
     "/edit/:id",
     (req, res) => {
         Post.findByIdAndUpdate(req.params.id, req.body)
-          .then(() => {
+          .then((post) => {
+            req.app.io.sockets.emit("newPost", post.location);
+
             res.send("post was updated");
           })
           .catch(err => res.send(err));
@@ -64,7 +71,9 @@ router.post(
     "/delete/:id",
     (req, res) => {
         Post.findByIdAndDelete(req.params.id)
-          .then(() => {
+          .then((post) => {
+            req.app.io.sockets.emit("newPost", post.location);
+
             res.send("Post deleted");
           })
           .catch(err => res.send(err));

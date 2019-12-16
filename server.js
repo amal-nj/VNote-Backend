@@ -6,7 +6,21 @@ const PORT = process.env.PORT || 5300;
 //const PORT = process.env.PORT;
 
 const server = express();
+//socket io setup
+var http = require('http').createServer(server);
+var io = require('socket.io')(http);
+// server.set('socketio', io);
+server.io=io
 
+io.on('connection', function(socket){
+  console.log('a user connected');
+  socket.on('disconnect', function(){
+    console.log('user disconnected');
+  });
+});
+
+
+//end of socket io setup
 const session = require("express-session");
 //jwt and passports
 const jwt = require("jsonwebtoken");
@@ -32,14 +46,17 @@ server.use(
 
 server.use(passport.initialize());
 server.use(passport.session());
+
+
 //Expo notfication handling
 const {Expo}= require('expo-server-sdk');
 const expo = new Expo();
 
 let savedPushTokens = [];
-let notifications = [];
+
 
 const handlePushTokens = (message) => {
+  let notifications = [];
   // Create the messages that you want to send to clents
   for (let pushToken of savedPushTokens) {
     // Each push token looks like ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]
@@ -90,6 +107,19 @@ const saveToken = (token) => {
 
 
 server.get('/', (req, res) => {
+// io.on('connection', function(socket){
+//   console.log('a user connected');
+//   socket.on('disconnect', function(){
+//     console.log('user disconnected');
+//   });
+//   socket.on('message', function(msg){
+//     console.log('message: ');
+//     socket.emit('hello')
+//   });
+//   socket.emit('hello')
+
+ 
+// });
   res.send('Push Notification Server Running');
 });
 
@@ -110,7 +140,7 @@ server.post('/message', (req, res) => {
 server.use("/api/auth", require("./routes/auth.route"));
 server.use(
   "/api/post",
- passport.authenticate("jwt", { session: false }),
+    passport.authenticate("jwt", { session: false }),
   require("./routes/post.route")
 );
 
@@ -123,4 +153,4 @@ server.use("*", (request, response) => {
   response.status(404).json({ message: "Data not found!" });
 });
 
-server.listen(PORT, () => console.log(`connected to ${PORT}`));
+http.listen(PORT, () => console.log(`connected to ${PORT}`));
