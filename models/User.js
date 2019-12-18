@@ -13,6 +13,12 @@ const userSchema = new Schema(
     firstName: { type: String},
     lastName: { type: String},
     phone: {type: Number},
+    expoToken:{type: String},
+    notifications:[{ type: Schema.Types.ObjectId, ref: "Notification" }],
+    following: [{ type: Schema.Types.ObjectId, ref: "User"}],
+    followers: [{ type: Schema.Types.ObjectId, ref: "User"}]
+
+
     
   },
   { timestamps: true }

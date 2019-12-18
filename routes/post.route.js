@@ -11,14 +11,22 @@ const router = express.Router();
 router.get("/",  (req, res) => {
   Post.find().populate('user')
     .then(data => {
-      
-      // req.app.io.sockets.emit("hello");
+      // data.user.password = ""; //remove password
+      let modifieddata=[...data]
+      for(let i=0;i<modifieddata.length;i++){
+        if(modifieddata[i].user){
+          modifieddata[i].user.password=""
 
-      res.send(data);
+        }
+      }
+      // req.app.io.sockets.emit("hello");
+      console.log("sending data...",modifieddata)
+      res.send(modifieddata);
     })
     .catch(e => {
+      console.log("error!",e)
       return res
-        .status(401)
+        .status(400)
         .json({ error: "error fetching posts data", msg: e });
     });
 });
@@ -85,6 +93,12 @@ router.post(
   router.get("/:id", (req, res) => {
     Post.findById(req.params.id).populate('user')
       .then(data => {
+        for(let i=0;i<data.length;i++){
+          if(data[i].user){
+            data[i].user.password=""
+  
+          }
+        }
         res.send(data);
       })
       .catch(e => {

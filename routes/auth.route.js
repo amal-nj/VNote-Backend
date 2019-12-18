@@ -38,7 +38,9 @@ router.post("/register", (request, response) => {
     phone: request.body.phone,
     password: request.body.password,
     isAdmin: request.body.isAdmin,
-    avatar: request.body.avatar
+    avatar: request.body.avatar,
+    // following:[],
+    // followers:[]    
   };
 
   //instance of data
@@ -72,7 +74,7 @@ router.post("/login", (request, response) => {
       user.password = ""; //remove password
       console.log(user);
       const token = jwt.sign(user.toJSON(), "your_jwt_secret", {
-        expiresIn: 60*60
+        expiresIn: 60*60*24*30//expires after a month
       });
       return response.status(200).json({ user, token });
     });
