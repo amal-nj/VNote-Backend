@@ -111,7 +111,7 @@ router.get("/UserToken/:username", (req, res) => {
 router.get("/UserId/:username", (req, res) => {
   User.findOne({ username: req.params.username })
     .then(user => {
-      console.log(`User id:, ${user._id}`);
+      console.log(`User id: ${user._id}`);
       return res.status(200).json({ id: user._id });
     })
     .catch(e => {
@@ -121,6 +121,7 @@ router.get("/UserId/:username", (req, res) => {
 
 //post a new notification to the data base
 router.post("/note/:id", (req, res) => {
+  console.log('/note/:id')
   let notification = new Notification({
     receiver: req.params.id,
     sender: req.user,

@@ -52,7 +52,7 @@ server.use(passport.session());
 server.use("/api/auth", require("./routes/auth.route"));
 server.use(
   "/api/post",
-    // passport.authenticate("jwt", { session: false }),
+     passport.authenticate("jwt", { session: false }),
   require("./routes/post.route")
 );
 server.use(
